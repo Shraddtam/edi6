@@ -16,6 +16,8 @@ import { RecommendationPanel } from "@/components/dashboard/recommendation-panel
 import { MlExplanationPanel } from "@/components/dashboard/ml-explanation-panel"
 import { DomainRiskPanel } from "@/components/dashboard/domain-risk-panel"
 import { PrivacyActionSummary } from "@/components/dashboard/privacy-action-summary"
+import { AnalysisProvenancePanel } from "@/components/dashboard/analysis-provenance-panel"
+import { PrivacyRoadmapPanel } from "@/components/dashboard/privacy-roadmap-panel"
 
 function DashboardContent() {
   const { user, logout, isLoading } = useAuth()
@@ -142,6 +144,10 @@ function DashboardContent() {
           <PrivacyActionSummary analysis={analysis} />
         </div>
 
+        <div className="mb-8">
+          <AnalysisProvenancePanel analysis={analysis} />
+        </div>
+
         {/* Score Section */}
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Privacy Debt Score */}
@@ -221,6 +227,15 @@ function DashboardContent() {
           </CardHeader>
           <CardContent>
             <RecommendationPanel recommendations={analysis.recommendations} />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border mt-8">
+          <CardHeader>
+            <CardTitle className="text-foreground">Privacy Improvement Roadmap</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PrivacyRoadmapPanel analysis={analysis} />
           </CardContent>
         </Card>
 
