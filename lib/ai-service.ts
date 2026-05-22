@@ -1,6 +1,7 @@
 import { generateText, Output } from "ai"
 import { z } from "zod"
 import { PrivacyFormData, PrivacyScore, AIRecommendation } from "./types"
+import { logger } from "@/lib/logger"
 
 const recommendationSchema = z.object({
   topRisks: z.array(z.string()).describe("Top 3-5 privacy risks identified"),
@@ -13,6 +14,11 @@ export async function generateAIRecommendations(
   score: PrivacyScore
 ): Promise<AIRecommendation> {
   const prompt = buildPrompt(data, score)
+  const apiKey = process.env.GROQ_API_KEY || process.env.AI_GATEWAY_API_KEY
+
+  if (apiKey?.startsWith("gsk_")) {
+    return generateGroqRecommendations(apiKey, prompt)
+  }
 
   const { output } = await generateText({
     model: "openai/gpt-5-mini",
@@ -37,6 +43,55 @@ export async function generateAIRecommendations(
   }
 
   return output
+}
+
+async function generateGroqRecommendations(apiKey: string, prompt: string): Promise<AIRecommendation> {
+  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile"
+
+  logger.info("genai.groq.request.started", { model })
+
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.2,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a cybersecurity and digital privacy expert. Return only valid JSON matching this shape: {\"topRisks\": string[], \"recommendations\": string[], \"priorityImprovements\": string[]}. Do not predict scores; explain the provided ML and risk outputs.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  })
+
+  const payload = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    throw new Error(payload?.error?.message || `Groq request failed with ${response.status}`)
+  }
+
+  const content = payload?.choices?.[0]?.message?.content
+  if (!content) {
+    throw new Error("Groq response did not include message content")
+  }
+
+  const parsed = recommendationSchema.parse(JSON.parse(content))
+  logger.info("genai.groq.request.completed", {
+    model,
+    recommendations: parsed.recommendations.length,
+  })
+
+  return parsed
 }
 
 function buildPrompt(data: PrivacyFormData, score: PrivacyScore): string {

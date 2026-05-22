@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Privacy Debt Intelligence",
+  "description": "Explainable browser-assisted privacy debt monitoring for risky domains, trackers, and browsing signals.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "114",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "notifications",
+    "sidePanel",
+    "webNavigation",
+    "downloads"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*/",
+    "http://*/"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Privacy Debt",
+    "default_popup": "popup/index.html"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content/content-script.js"],
+      "run_at": "document_idle",
+      "type": "module"
+    }
+  ],
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "128": "icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

@@ -27,7 +27,7 @@ export function PrivacyActionSummary({ analysis }: PrivacyActionSummaryProps) {
         </div>
         <div className="text-2xl font-bold text-foreground">{primary.label}</div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {Math.round(primary.value)}/100 risk contribution
+          {Math.round(primary.value)}% risk contribution
         </p>
       </div>
 
@@ -50,9 +50,7 @@ export function PrivacyActionSummary({ analysis }: PrivacyActionSummaryProps) {
           {analysis.score.ml?.model || "baseline"} scoring
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {analysis.score.ml
-            ? `raw ${analysis.score.ml.rawModelScore ?? analysis.score.totalScore}, calibrated ${analysis.score.totalScore}`
-            : "local score engine"}
+          {analysis.score.ml ? "explainable privacy debt model" : "local score engine"}
         </p>
       </div>
     </div>
