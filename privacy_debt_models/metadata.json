@@ -1,0 +1,57 @@
+{
+  "d1_features": [
+    "privacy_awareness",
+    "password_reuse_count",
+    "risky_domains_visited",
+    "third_party_apps",
+    "inactive_accounts",
+    "breached_accounts",
+    "tracker_acceptance_rate",
+    "avg_password_strength",
+    "public_profile_score",
+    "pii_shared_frequency",
+    "vpn_usage",
+    "mfa_enabled",
+    "browser_security_score",
+    "account_age_days",
+    "risk_burden",
+    "protection_score",
+    "exposure_index",
+    "awareness_adjusted_risk"
+  ],
+  "d2_features": [
+    "url_length",
+    "url_length",
+    "hyphen_count",
+    "hyphen_count",
+    "digit_ratio",
+    "sld_entropy",
+    "tld_risk",
+    "brand_similarity_score",
+    "brand_similarity_score",
+    "is_likely_typosquat",
+    "is_ip_address",
+    "keyword_score",
+    "excessive_subdomains",
+    "subdomain_depth",
+    "special_chars",
+    "phishing_reports",
+    "malware_reports",
+    "ssl_ok"
+  ],
+  "awareness_map": {
+    "low": 0,
+    "medium": 1,
+    "high": 2
+  },
+  "label_map": {
+    "Low": 0,
+    "Medium": 1,
+    "High": 2
+  },
+  "risk_level_map": {
+    "0": "Low",
+    "1": "Medium",
+    "2": "High"
+  }
+}

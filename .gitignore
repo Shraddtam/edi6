@@ -62,15 +62,15 @@ env/
 
 # ML model artifacts
 
-*.pkl
+#*.pkl
 *.joblib
 *.h5
 *.onnx
 
 # Local ML model folders
 
-privacy_debt_models/
-ml_service/models/
+#privacy_debt_models/
+#ml_service/models/
 
 # ---------------------------------------------------
 
